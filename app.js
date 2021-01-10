@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const passport = require('passport');
+
 const keys = require('./environments/environment.dev')
 
 // Routs
@@ -9,13 +12,15 @@ const categoryRouts = require('./routs/category');
 const orderRouts = require('./routs/order');
 const positionRouts = require('./routs/position');
 
-const mongoose = require('mongoose');
 
 const app = express();
 
 mongoose.connect(keys.mongoURI)
     .then(() => console.log('Mongo DB connect'))
     .catch((e) => console.log('Mongo DB connect error ', e));
+
+app.use(passport.initialize());
+require('./middleware/passport')(passport);
 
 app.use(require('morgan')());
 app.use(bodyParser.urlencoded({extended: true}));

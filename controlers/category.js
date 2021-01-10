@@ -1,6 +1,6 @@
 module.exports.getAll = function(req, res) {
     res.status(200).json({
-        message: 'Working get All  controller',
+        message: 'Working get All controller',
         category: true
     });
 }
