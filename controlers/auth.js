@@ -2,6 +2,7 @@ const bcript = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const keys = require('../environments/environment.dev');
+const errorHandler = require('../utils/errorHandler');
 
 // Аторизация пользавателя
 module.exports.login = async function (req, res) {
@@ -55,9 +56,7 @@ module.exports.register = async function (req, res) {
                 message: 'Користувач успішно доданий.'
             });
         } catch (err) {
-            res.status(400).json({
-                message: 'Виникла помилка при доданні користувача, спробуйте ще.'
-            });
+            errorHandler(err, res);
         }
 
     }

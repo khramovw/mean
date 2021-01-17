@@ -1,34 +1,63 @@
-module.exports.geByCategory = function(req, res) {
-    res.status(200).json({
-        message: 'Working get All  controller',
-        position: true
-    });
+const Position = require('../models/Position');
+const errorHandler = require('../utils/errorHandler');
+
+module.exports.geByCategory = async function (req, res) {
+    try {
+        const position = await Position.find({
+            category: req.params.categoryId,
+            user: req.user.id
+        });
+
+        res.status(200).json(position);
+
+    } catch (error) {
+        errorHandler(error)
+    }
 }
 
-module.exports.getById = function(req, res) {
-    res.status(200).json({
-        message: 'Working get By Id controller',
-        position: true
-    });
+module.exports.create = async function (req, res) {
+    try {
+        const position = await new Position({
+            name: req.body.name,
+            cost: req.body.cost,
+            category: req.body.category,
+            user: req.user.id
+        }).save();
+
+        res.status(201).json(position);
+
+    } catch (error) {
+        errorHandler(error)
+    }
 }
 
-module.exports.remove = function(req, res) {
-    res.status(200).json({
-        message: 'Working remove controller',
-        position: true
-    });
+module.exports.remove = async function (req, res) {
+    try {
+        await Position.remove({
+            id: req.params.id
+        });
+
+        res.status(200).json({
+            position: req.params.id,
+            message: 'removed'
+        });
+
+    } catch (error) {
+        errorHandler(error)
+    }
 }
 
-module.exports.create = function(req, res) {
-    res.status(200).json({
-        message: 'Working create controller',
-        position: true
-    });
-}
+module.exports.update = async function (req, res) {
+    try {
+        const position = await Position.findOneAndUpdate(
+            {id: req.params.id},
+            {$set: req.body},
+            {new: true}
+        );
 
-module.exports.update = function(req, res) {
-    res.status(200).json({
-        message: 'Working update controller',
-        position: true
-    });
+        res.status(200).json(position);
+
+    } catch (error) {
+        errorHandler(error)
+    }
 }
